@@ -23,9 +23,13 @@ function htmlToElement(rawHtml, opts, done) {
       }
 
       if (node.type == 'text') {
+        var text = node.data.trim();
+        if (node.data.trim() && node.data.endsWith(' ')) {
+            text += ' ';
+        }
         return (
           <Text key={index} style={parent ? opts.styles[parent.name] : null}>
-            {entities.decodeHTML(node.data)}
+            {entities.decodeHTML(text)}
           </Text>
         )
       }
@@ -38,12 +42,12 @@ function htmlToElement(rawHtml, opts, done) {
 
         return (
           <Text key={index} onPress={linkPressHandler}>
-            {node.name == 'pre' ? LINE_BREAK : null}
+            {node.name == 'pre' || node.name == 'ul' ? LINE_BREAK : null}
             {node.name == 'li' ? BULLET : null}
             {domToElement(node.children, node)}
-            {node.name == 'br' || node.name == 'li' ? LINE_BREAK : null}
+            {node.name == 'br' || node.name == 'li' || node.name == 'ul' ? LINE_BREAK : null}
             {node.name == 'p' && index < list.length - 1 ? PARAGRAPH_BREAK : null}
-            {node.name == 'h1' || node.name == 'h2' || node.name == 'h3' || node.name == 'h4' || node.name == 'h5' ? LINE_BREAK : null}
+            {node.name == 'h1' || node.name == 'h2' || node.name == 'h3' || node.name == 'h4' || node.name == 'h5' ? PARAGRAPH_BREAK : null}
           </Text>
         )
       }

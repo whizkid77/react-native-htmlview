@@ -19,7 +19,7 @@ var HTMLView = React.createClass({
 
   getDefaultProps() {
     return {
-      onLinkPress: url => Linking.openURL(url),
+      onLinkPress: Linking.openURL,
       onError: console.error.bind(console),
     }
   },
