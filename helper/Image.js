@@ -1,15 +1,19 @@
 var ReactNative = require('react-native')
+var React = require('react')
 var {
   Image,
-  Dimensions,
 } = ReactNative
-
-var {width} = Dimensions.get('window')
 
 var baseStyle = {
   backgroundColor: 'transparent',
 }
+
 var ResizableImage = React.createClass({
+  propTypes: {
+      style: React.PropTypes.object,
+      source: React.PropTypes.object.isRequired,
+      maxWidth: React.PropTypes.number.isRequired,
+  },
   getInitialState: function() {
     return {
       // set width 1 is for preventing the warning
@@ -29,9 +33,9 @@ var ResizableImage = React.createClass({
   },
   render: function() {
     var finalSize = {}
-    if (this.state.width > width) {
-      finalSize.width = width
-      var ratio = width / this.state.width
+    if (this.state.width > this.props.maxWidth) {
+      finalSize.width = this.props.maxWidth
+      var ratio = this.props.maxWidth / this.state.width
       finalSize.height = this.state.height * ratio
     }
     var style = Object.assign(baseStyle, this.props.style, this.state, finalSize)
@@ -41,7 +45,7 @@ var ResizableImage = React.createClass({
     } else {
       source = Object.assign(source, this.props.source, finalSize)
     }
-
+      
     return (
       <Image
         style={style}

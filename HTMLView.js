@@ -15,6 +15,7 @@ var HTMLView = React.createClass({
     onLinkPress: React.PropTypes.func,
     onError: React.PropTypes.func,
     renderNode: React.PropTypes.func,
+    maxWidth: React.PropTypes.number.isRequired,
   },
 
   getDefaultProps() {
@@ -50,6 +51,7 @@ var HTMLView = React.createClass({
 
     var opts = {
       linkHandler: this.props.onLinkPress,
+      maxWidth: this.props.maxWidth,
       styles: Object.assign({}, baseStyles, this.props.stylesheet),
       customRenderer: this.props.renderNode,
     }
@@ -63,9 +65,9 @@ var HTMLView = React.createClass({
 
   render() {
     if (this.state.element) {
-      return <Text children={this.state.element} />
+      return <View children={this.state.element} />
     }
-    return <Text />
+    return <View />
   },
 })
 
@@ -73,7 +75,7 @@ var boldStyle = {fontWeight: '500'}
 var italicStyle = {fontStyle: 'italic'}
 var codeStyle = {fontFamily: 'Menlo'}
 
-var baseStyles = StyleSheet.create({
+var baseStyles = {
   b: boldStyle,
   strong: boldStyle,
   i: italicStyle,
@@ -84,6 +86,6 @@ var baseStyles = StyleSheet.create({
     fontWeight: '500',
     color: '#007AFF',
   },
-})
+}
 
 module.exports = HTMLView
