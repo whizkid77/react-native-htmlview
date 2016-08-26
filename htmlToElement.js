@@ -26,7 +26,7 @@ function htmlToElement(rawHtml, opts, done) {
 
             if (node.type == 'text') {
                 //replace multi-whitespace with single space, just like html
-                var text = node.data.replace(/\s+/g,' ');
+                var text = (node.prependText||'') + node.data.replace(/\s+/g,' ');
                 if (!parent || (parent && parent.isBlock && (index == 0 || index == dom.length -1))) {
                     //text nodes within block elements are trimmed if they aren't the middle siblings
                     text = text.trim();
@@ -74,6 +74,20 @@ function htmlToElement(rawHtml, opts, done) {
                     'p','pre','section','table','tfoot','ul','video',
                 ].indexOf(node.name) != -1;
                 node.isBlock = isBlock;
+
+                //If it's an LI, look for the first Text node descendant and prepend with a bullet.
+                if (node.name == 'li') {
+                    var setPre = false;
+                    var currentNode = node;
+                    while(currentNode.children && currentNode.children.length > 0 && !setPre) {
+                        currentNode = currentNode.children[0];
+                        if (currentNode.type == 'text') {
+                            currentNode.prependText = BULLET + ' ';
+                            setPre = true;
+                        }
+                    }
+                }
+                
                 if (isBlock) {
                     return (
                         <View key={index} style={{...viewStyles(opts.styles[node.name]),width:opts.maxWidth}}>
